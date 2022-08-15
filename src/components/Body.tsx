@@ -1,14 +1,12 @@
 import React from "react";
-import { Box } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Container, Paper } from "@mui/material";
+import { makeStyles, Box, Container, Paper } from "../UiComponents";
 import type { Student } from "./ComponentTypes";
-import type { Bodytype } from "./ComponentTypes";
+import type { BodyType } from "./ComponentTypes";
 import useFetch from "../CustomHook/useFetch";
-import Side from "./SideBar";
+import SideBar from "./SideBar";
 import Tables from "./Tables";
-import Top from "./TopBar";
-
+import NavBar from "./NavBar";
+import { params } from "./UrlParam";
 const UseStyles = makeStyles({
   Body: {
     border: "1px solid #dddddd",
@@ -47,6 +45,7 @@ const UseStyles = makeStyles({
     maxWidth: "750px",
     display: "inline-block",
     width: "100%",
+    margin: "0px auto",
     "@media screen and (max-width:1100px)": {
       maxWidth: "650px",
     },
@@ -61,8 +60,8 @@ const UseStyles = makeStyles({
     },
   },
 });
-const Body = ({ handleClickOpens, getId, handleID }: Bodytype) => {
-  const { data, isPending, error } = useFetch("http://localhost:5000/Students");
+const Body = ({ handleClickOpens, getId, handleID }: BodyType) => {
+  const { data, isPending, error } = useFetch(params);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [searchResults, setResults] = React.useState<Student[]>([]);
@@ -83,7 +82,6 @@ const Body = ({ handleClickOpens, getId, handleID }: Bodytype) => {
       setResults(students);
     }
   };
-
   React.useEffect(() => {
     const newFilteredStudents = students.filter((student) =>
       student.groups.find((group) => {
@@ -95,7 +93,6 @@ const Body = ({ handleClickOpens, getId, handleID }: Bodytype) => {
     );
     setFilteredStudents(newFilteredStudents);
   }, [GroupArr]);
-
   const handleFilter = (value: string) => {
     const current = GroupArr.indexOf(value);
     const newValue = [...GroupArr];
@@ -107,21 +104,19 @@ const Body = ({ handleClickOpens, getId, handleID }: Bodytype) => {
     setGroupArr(newValue);
   };
   console.log(GroupArr);
-
   React.useEffect(() => {
     if (data?.length) {
       setStudents(data);
     }
   }, [data]);
-
   return (
     <Container className={classes.Body} component={Paper} maxWidth="lg">
       <Box className="top">
         {students && (
-          <Top
-            topstudents={students}
+          <NavBar
+            topStudents={students}
             term={searchTerm}
-            searchkeyword={searchHandler}
+            searchKeyword={searchHandler}
             handleClickOpen={handleClickOpens}
             handleID={handleID}
           />
@@ -131,22 +126,21 @@ const Body = ({ handleClickOpens, getId, handleID }: Bodytype) => {
         <Box className={classes.Side}>
           {error && <Box>{error}</Box>}
           {isPending && <Box>Loading...</Box>}
-          {students && <Side getfilter={(e: string) => handleFilter(e)} />}
+          {students && <SideBar getFilter={(e: string) => handleFilter(e)} />}
         </Box>
         <Box className={classes.Table}>
           {error && <Box>{error}</Box>}
           {isPending && <Box>Loading...</Box>}
-
           {students && (
             <Tables
-              tablestu={
+              tableStu={
                 GroupArr.length > 0
                   ? filteredStudents
                   : searchTerm.length < 1
                   ? students
                   : searchResults
               }
-              setTablestu={setStudents}
+              setTableStu={setStudents}
               getId={getId}
               handleClickOpens={handleClickOpens}
             />

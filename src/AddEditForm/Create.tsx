@@ -1,53 +1,66 @@
 import React from "react";
 import * as yup from "yup";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import { FormLabel } from "@mui/material";
-import { makeStyles } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Box,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  makeStyles,
+} from "../UiComponents";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { CreateStudentProps } from "../components/ComponentTypes";
-import type { Createprops } from "../components/ComponentTypes";
+import type { CreateProps } from "../components/ComponentTypes";
+import type { InputProps } from "../components/ComponentTypes";
+import { params } from "../components/UrlParam";
+import { fetchWrapper, _updateData } from "../Utils/FetchWrapper";
+
 const UseStyles = makeStyles({
   create: {
     margin: 0,
     padding: 0,
   },
-  text: {
-    width: "100%",
-    marginBottom: "6px",
-  },
-  textname: {
-    width: "100%",
-    marginBottom: "5px",
-  },
-  date: {
-    marginTop: "10px",
-  },
   box: {
     display: "flex",
     flexDirection: "column",
+
+    width: "420px",
+
+    marginBottom: "6px",
+    "@media screen and (max-width:515px)": {
+      width: "350px",
+    },
+    "@media screen and (max-width:445px)": {
+      width: "300px",
+    },
+    "@media screen and (max-width:400px)": {
+      width: "280px",
+    },
+    "@media screen and (max-width:366px)": {
+      width: "200px",
+    },
   },
   groupBox: {
     display: "flex",
     flexDirection: "column",
-    marginLeft: "50px",
+    margin: "10px 100px",
+  },
+  radio: {
+    margin: "10px 100px",
   },
   check: {
     gap: "5px",
   },
   btn: {
-    marginTop: "10px",
-    marginLeft: "40px",
+    margin: "10px auto",
+    display: "flex",
   },
   form: {
     margin: "0",
     padding: "0",
   },
-
   invalidFeedback: {
     color: "red",
     fontSize: "small",
@@ -58,16 +71,17 @@ const UseStyles = makeStyles({
     color: "red",
     fontSize: "small",
     marginTop: "0",
+    marginLeft: "50px",
+  },
+  SaveEditbtn: {
+    marginRight: "5px",
   },
 });
-const Create = ({ createstu, setCreatestu, id }: Createprops) => {
-  const classes = UseStyles();
-  console.log(id);
-  const isAddMode = !id;
+const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
   const [students, setStudents] = React.useState<CreateStudentProps[]>([]);
-  const [isPending, setpending] = React.useState<boolean>(false);
-  console.log(isAddMode);
-
+  const [isPending, setPending] = React.useState<boolean>(false);
+  const isAddMode = !id;
+  const classes = UseStyles();
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -75,11 +89,11 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
       .max(25, "Name could not be 25 characters long")
       .min(4, "Name must contain at least 4 characters")
       .required("Name is required"),
-    Place_of_Birth: yup
+    placeOfBirth: yup
       .string()
       .matches(/^[aA-zZ\s]+$/, "only alphabets are allowed")
       .required("Place of Birth is required"),
-    Date_of_Birth: yup.string().required("Date of Birth is required"),
+    dateOfBirth: yup.string().required("Date of Birth is required"),
     sex: yup.string().nullable().required("Gender is required"),
     groups: yup
       .array()
@@ -88,139 +102,98 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
       .max(4, "maximum 4 fields can be chosen")
       .required("Groups are required"),
   });
-
   const { register, handleSubmit, reset, setValue, getValues, formState } =
     useForm<CreateStudentProps>({
       resolver: yupResolver(validationSchema),
     });
   const { errors } = formState;
-  console.log(errors);
+
   function onSubmit(data: CreateStudentProps) {
-    return isAddMode ? createStudent(data) : updatestudent(id, data);
+    return isAddMode ? createStudent(data) : updateStudent(data, id);
   }
-  const update = () => {
-    fetch("http://localhost:5000/Students").then((result) => {
-      result.json().then((resp) => {
-        setCreatestu(resp);
-      });
-    });
-  };
-  const updatestudent = (
-    id: number | string,
-    updatedstudent: CreateStudentProps
-  ) => {
-    fetch(`http://localhost:5000/Students/` + id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedstudent),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then(() => {
-        setCreatestu(
-          createstu.map((student) =>
-            student.id === id ? updatedstudent : student
-          )
+  function updateStudent(data: CreateStudentProps, id: number) {
+    fetchWrapper({ method: "PUT", body: data, url: `${params}/` + id }).then(
+      () => {
+        setCreateStu(
+          createStu.map((student) => (student.id === id ? data : student))
         );
 
-        update();
-      });
-  };
-
-  const createStudent = (data: CreateStudentProps) => {
-    setpending(true);
-    fetch("http://localhost:5000/Students", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then((res) => {
-        console.log("response");
-        setpending(false);
-        return res.json();
-      })
-
-      .then((data) => {
-        setCreatestu((prev: CreateStudentProps[]) => [...prev, data]);
-
-        console.log("new student added");
-      });
-  };
+        _updateData(params, setCreateStu);
+      }
+    );
+  }
+  function createStudent(data: CreateStudentProps) {
+    fetchWrapper({ method: "POST", body: data, url: `${params}` }).then(
+      (data) => {
+        setCreateStu((prev: CreateStudentProps[]) => [...prev, data]);
+      }
+    );
+  }
   React.useEffect(() => {
     if (!isAddMode) {
       // get user and set form fields
-      fetch(`http://localhost:5000/Students/` + id)
+      fetch(`${params}/` + id)
         .then((res) => {
           return res.json();
         })
         .then((data) => {
           const fields: Array<
-            "name" | "Place_of_Birth" | "Date_of_Birth" | "sex" | "groups"
-          > = ["name", "Place_of_Birth", "Date_of_Birth", "sex", "groups"];
+            "name" | "placeOfBirth" | "dateOfBirth" | "sex" | "groups"
+          > = ["name", "placeOfBirth", "dateOfBirth", "sex", "groups"];
           fields.forEach((field) => setValue(field, data[field]));
           setStudents(data);
         });
     }
   }, []);
   console.log("getValues", getValues());
+  const TextInputArr: InputProps[] = [
+    {
+      label: "Name",
+      type: "text",
+      placeholder: "Enter the Name",
+      id: "name",
+      name: "name",
+    },
+    {
+      label: "Place of Birth",
+      type: "text",
+      placeholder: "Enter the Country",
+      id: "placeOfBirth",
+      name: "placeOfBirth",
+    },
+    {
+      label: "Date of Birth",
+      type: "date",
+      placeholder: "Enter your Date of Birth",
+      id: "dateOfBirth",
+      name: "dateOfBirth",
+    },
+  ];
   return (
     <Box className={classes.create}>
       <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
         <FormControl>
-          {/* <h1>{isAddMode ? "Add Student" : "Edit Student"}</h1> */}
-          <Box className={classes.textname}>
-            <TextField
-              fullWidth
-              label="Name"
-              type="text"
-              placeholder="Enter the Name"
-              variant="outlined"
-              // className={classes.textname}
-              // className={`form-control ${errors.name ? "is-invalid" : ""}`}
-              id="name"
-              {...register("name")}
-              defaultValue={!isAddMode ? { getValues } : ""}
-            />
-            <Box className={classes.invalidFeedback}>
-              {errors.name?.message}
-            </Box>
-          </Box>
-          <Box className="form-group">
-            <TextField
-              label="Place of Birth"
-              type="text"
-              placeholder="Enter the Country"
-              className={classes.text}
-              id="Place_of_Birth"
-              {...register("Place_of_Birth")}
-              defaultValue={!isAddMode ? { getValues } : ""}
-            />
-            <Box className={classes.invalidFeedback}>
-              {errors.Place_of_Birth?.message}
-            </Box>
-          </Box>
-          <Box className={classes.box}>
-            <FormLabel htmlFor="Date_of_Birth">Date of Birth:</FormLabel>
-            <TextField
-              // FormLabel="Date of Birth"
-              type="date"
-              placeholder="Enter your Date of Birth"
-              className={classes.date}
-              id="Date_of_Birth"
-              {...register("Date_of_Birth")}
-              defaultValue={!isAddMode ? { getValues } : ""}
-            />
-            <Box className={classes.invalidFeedback}>
-              {errors.Date_of_Birth?.message}
-            </Box>
-          </Box>
-
+          {TextInputArr.map((input) => {
+            console.log("input", input);
+            return (
+              <Box className={classes.box}>
+                <FormLabel htmlFor={input.name}>{input.label}</FormLabel>
+                <TextField
+                  fullWidth
+                  type={input.type}
+                  placeholder={input.placeholder}
+                  id={input.id}
+                  error={!!errors[input.name]}
+                  helperText={errors[input.name] && errors[input.name]?.message}
+                  {...register(input.name)}
+                  defaultValue={!isAddMode ? { getValues } : ""}
+                />
+              </Box>
+            );
+          })}
           <Box className="form-group">
             <FormLabel>Sex:</FormLabel>
-            <Box sx={{ marginLeft: "50px" }}>
+            <Box className={classes.radio}>
               <Box className="form-check form-check-inline">
                 <FormControlLabel
                   label="Male"
@@ -272,7 +245,6 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
                   />
                 }
               />
-
               <FormControlLabel
                 label="Chemistry"
                 className={classes.check}
@@ -280,7 +252,6 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
                   <TextField
                     type="checkbox"
                     value="Chemistry"
-                    sx={{ gap: "5px" }}
                     {...register("groups")}
                     defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
@@ -294,7 +265,6 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
                   <TextField
                     type="checkbox"
                     value="Physics"
-                    sx={{ gap: "5px" }}
                     {...register("groups")}
                     defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
@@ -308,14 +278,12 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
                   <TextField
                     type="checkbox"
                     value="Computer"
-                    sx={{ gap: "5px" }}
                     {...register("groups")}
                     defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
               />
-
               <FormControlLabel
                 label="Biology"
                 className={classes.check}
@@ -323,7 +291,6 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
                   <TextField
                     type="checkbox"
                     value="Biology"
-                    sx={{ gap: "5px" }}
                     {...register("groups")}
                     defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
@@ -336,22 +303,22 @@ const Create = ({ createstu, setCreatestu, id }: Createprops) => {
             </Box>
           </Box>
           <Box className={classes.btn}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              type="submit"
-              sx={{ padding: "5px", marginRight: "20px" }}
-            >
-              {isAddMode ? "Submit" : "Save"}
-            </Button>
-
+            <Box className={classes.SaveEditbtn}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                type="submit"
+                // sx={{ marginRight: "5px" }}
+              >
+                {isAddMode ? "Submit" : "Save"}
+              </Button>
+            </Box>
             <Button
               variant="contained"
               color="primary"
               size="small"
               type="reset"
-              sx={{ padding: "5px" }}
               onClick={() => reset()}
             >
               Reset

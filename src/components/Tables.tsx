@@ -1,5 +1,4 @@
 import React from "react";
-import TablePagination from "@mui/material/TablePagination";
 import {
   TableBody,
   TableHead,
@@ -8,11 +7,14 @@ import {
   TableContainer,
   Paper,
   Table,
-} from "@mui/material";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import type { tableStudentProps } from "./ComponentTypes";
-import type { Tableprops } from "./ComponentTypes";
-import { makeStyles } from "@material-ui/core/styles";
+  TablePagination,
+  DeleteRoundedIcon,
+  makeStyles,
+  Box,
+} from "../UiComponents";
+import type { TableProps } from "./ComponentTypes";
+import { params } from "./UrlParam";
+import { fetchWrapper, _updateData } from "../Utils/FetchWrapper";
 const UseStyles = makeStyles({
   table: {
     fontFamily: "arial, sans-serif",
@@ -26,78 +28,77 @@ const UseStyles = makeStyles({
     textAlign: "left",
     padding: "8px",
   },
+  head: {
+    fontWeight: "bold",
+  },
+  deleteIcon: {
+    cursor: "pointer",
+  },
+  studentCell: {
+    color: "blue",
+    cursor: "pointer",
+  },
+  Container: {
+    maxHeight: "300px",
+    width: "100%",
+  },
 });
 const Tables = ({
-  tablestu,
+  tableStu,
   handleClickOpens,
-  setTablestu,
+  setTableStu,
   getId,
-}: Tableprops) => {
+}: TableProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const classes = UseStyles();
+
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
   };
-  console.log(tablestu.length);
-
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const update = () => {
-    fetch("http://localhost:5000/Students").then((result) => {
-      result.json().then((resp: tableStudentProps[]) => {
-        setTablestu(resp);
-      });
-    });
-  };
   const handleDelete = (id: number) => {
-    fetch("http://localhost:5000/Students/" + id, {
-      method: "DELETE",
-    }).then(() => {
-      update();
+    fetchWrapper({ method: "DELETE", url: `${params}/` + id }).then(() => {
+      _updateData(params, setTableStu);
     });
   };
   const handleStudent = (id: number) => {
     handleClickOpens();
     getId(id);
   };
-
   return (
     <div className="Table">
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: "300px", width: "100%" }}
-      >
+      <TableContainer component={Paper} className={classes.Container}>
         <Table aria-label="simple table" stickyHeader className={classes.table}>
           <TableHead>
             <TableRow className={classes.td}>
-              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Sex</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Place of Birth</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Date of Birth</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Groups</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
+              <TableCell className={classes.head}>Name</TableCell>
+              <TableCell className={classes.head}>Sex</TableCell>
+              <TableCell className={classes.head}>Place of Birth</TableCell>
+              <TableCell className={classes.head}>Date of Birth</TableCell>
+              <TableCell className={classes.head}>Groups</TableCell>
+              <TableCell className={classes.head}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tablestu.length > 0
-              ? tablestu
+            {tableStu.length > 0
+              ? tableStu
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((student) => (
                     <TableRow key={student.id} className={classes.td}>
-                      <TableCell
-                        onClick={() => handleStudent(student.id)}
-                        sx={{ color: "blue", cursor: "pointer" }}
-                      >
-                        {student.name}
+                      <TableCell onClick={() => handleStudent(student.id)}>
+                        <Box className={classes.studentCell}>
+                          {student.name}
+                        </Box>
                       </TableCell>
 
                       <TableCell>{student.sex}</TableCell>
-                      <TableCell>{student.Place_of_Birth}</TableCell>
-                      <TableCell>{student.Date_of_Birth}</TableCell>
+                      <TableCell>{student.placeOfBirth}</TableCell>
+                      <TableCell>{student.dateOfBirth}</TableCell>
                       <TableCell>
                         {student.groups.map((group) => (
                           <p>{group}</p>
@@ -105,12 +106,10 @@ const Tables = ({
                       </TableCell>
                       <TableCell>
                         <DeleteRoundedIcon
-                          sx={{ cursor: "pointer" }}
+                          className={classes.deleteIcon}
                           color="primary"
                           onClick={() => handleDelete(student.id)}
                         />
-
-                        {/* </Button> */}
                       </TableCell>
                     </TableRow>
                   ))
@@ -121,7 +120,7 @@ const Tables = ({
       <TablePagination
         sx={{ margin: "0" }}
         component="div"
-        count={tablestu.length}
+        count={tableStu.length}
         page={page}
         rowsPerPageOptions={[5, 10, 25]}
         rowsPerPage={rowsPerPage}

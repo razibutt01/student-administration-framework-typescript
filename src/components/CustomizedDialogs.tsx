@@ -1,10 +1,8 @@
 import * as React from "react";
-
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -14,6 +12,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
+  },
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      width: "100%",
+      maxWidth: "500px",
+      maxHeight: "600px", // Set your width here
+    },
   },
 }));
 
@@ -73,7 +78,9 @@ export default function CustomizedDialogs(props: DialogProps) {
         >
           Modal title
         </BootstrapDialogTitle>
-        <DialogContent dividers>{children}</DialogContent>
+        <DialogContent dividers sx={{ maxWidth: "1000px" }}>
+          {children}
+        </DialogContent>
       </BootstrapDialog>
     </div>
   );

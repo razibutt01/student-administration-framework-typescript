@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, FormControlLabel, TextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, FormControlLabel, TextField, Box } from "../UiComponents";
 import type { SideProps } from "./ComponentTypes";
 const UseStyles = makeStyles({
   side: {
@@ -41,76 +40,53 @@ const UseStyles = makeStyles({
     },
   },
 });
-const Side = ({ getfilter }: SideProps) => {
+const SideBar = ({ getFilter }: SideProps) => {
   const classes = UseStyles();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log(e.target.value);
-    getfilter(e.target.value);
+    getFilter(e.target.value);
   };
-
+  const FieldArr = [
+    {
+      label: "Chemistry",
+      value: "Chemistry",
+    },
+    {
+      label: "Physics",
+      value: "Physics",
+    },
+    {
+      label: "Maths",
+      value: "Maths",
+    },
+    {
+      label: "Computer",
+      value: "Computer",
+    },
+    {
+      label: "Biology",
+      value: "Biology",
+    },
+  ];
   return (
     <Box className={classes.side}>
-      <FormControlLabel
-        label="Chemistry"
-        className={classes.label}
-        control={
-          <TextField
-            type="checkbox"
-            value="Chemistry"
-            onChange={(e) => handleChange(e)}
-          />
-        }
-      />
-
-      <FormControlLabel
-        label="Physics"
-        className={classes.label}
-        control={
-          <TextField
-            type="checkbox"
-            value="Physics"
-            onChange={(e) => handleChange(e)}
-          />
-        }
-      />
-      <FormControlLabel
-        label="Maths"
-        className={classes.label}
-        control={
-          <TextField
-            type="checkbox"
-            value="Maths"
-            onChange={(e) => handleChange(e)}
-          />
-        }
-      />
-      <FormControlLabel
-        label="Computer"
-        className={classes.label}
-        control={
-          <TextField
-            type="checkbox"
-            value="Computer"
-            onChange={(e) => handleChange(e)}
-          />
-        }
-      />
-
-      <FormControlLabel
-        label="Biology"
-        className={classes.label}
-        control={
-          <TextField
-            type="checkbox"
-            value="Biology"
-            onChange={(e) => handleChange(e)}
-          />
-        }
-      />
+      {FieldArr.map((fields) => (
+        <FormControlLabel
+          label={fields.label}
+          className={classes.label}
+          control={
+            <TextField
+              type="checkbox"
+              value={fields.value}
+              variant="filled"
+              onChange={(e) => handleChange(e)}
+            />
+          }
+        />
+      ))}
     </Box>
   );
 };
 
-export default Side;
+export default SideBar;

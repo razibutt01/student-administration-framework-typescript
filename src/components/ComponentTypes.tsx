@@ -1,59 +1,72 @@
 import React from "react";
+export type InputProps = {
+  label: string;
+  type: string;
+  placeholder: string;
+  id: string;
+  name: "name" | "placeOfBirth" | "dateOfBirth" | "sex" | "groups";
+};
 export type Student = {
   name: string;
   sex: string;
-  Date_of_Birth: string;
-  Place_of_Birth: string;
+  dateOfBirth: string;
+  placeOfBirth: string;
   groups: string[];
   id: number;
 };
-export type Bodytype = {
+export type BodyType = {
   handleClickOpens: () => void;
   getId: (id: number) => void;
   handleID: () => void;
 };
 export type SideProps = {
-  getfilter(e: string): void;
+  getFilter(e: string): void;
 };
 export type tableStudentProps = {
   name: string;
   sex: string;
-  Date_of_Birth: string;
-  Place_of_Birth: string;
+  dateOfBirth: string;
+  placeOfBirth: string;
   groups: string[];
   id: number;
 };
-export type Tableprops = {
-  tablestu: tableStudentProps[];
-  setTablestu(e: tableStudentProps[]): void;
+export type TableProps = {
+  tableStu: tableStudentProps[];
+  setTableStu(e: tableStudentProps[]): void;
   handleClickOpens: () => void;
   getId: (id: number) => void;
 };
 export type TopStudentProps = {
   name: string;
   sex: string;
-  Date_of_Birth: string;
-  Place_of_Birth: string;
+  dateOfBirth: string;
+  placeOfBirth: string;
   groups: string[];
   id: number;
 };
-export type Topprops = {
+export type TopProps = {
   term: string;
-  searchkeyword(e: string): void;
-  topstudents: TopStudentProps[];
+  searchKeyword(e: string): void;
+  topStudents: TopStudentProps[];
   handleClickOpen: () => void;
   handleID: () => void;
 };
 export type CreateStudentProps = {
   name: string;
   sex: string;
-  Date_of_Birth: string;
-  Place_of_Birth: string;
+  dateOfBirth: string;
+  placeOfBirth: string;
   groups: string[];
   id: number;
 };
-export type Createprops = {
-  createstu: CreateStudentProps[];
-  setCreatestu: React.Dispatch<React.SetStateAction<Student[]>>;
+export type CreateProps = {
+  createStu: CreateStudentProps[];
+  setCreateStu: React.Dispatch<React.SetStateAction<Student[]>>;
   id: number;
+};
+export type fetchWrapperprop = {
+  method: "GET" | "POST" | "PUT" | "DELETE";
+  header?: string;
+  body?: Student;
+  url: string;
 };

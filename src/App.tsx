@@ -1,45 +1,40 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
-import Container from "@mui/material/Container";
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@mui/material";
+import { makeStyles, Container, Typography } from "./UiComponents";
 import type { Student } from "./components/ComponentTypes";
 import "./App.css";
 import useFetch from "./CustomHook/useFetch";
 import Body from "./components/Body";
-import CustomizedDialogs from "./components/Popup";
+import CustomizedDialogs from "./components/CustomizedDialogs";
 import Create from "./AddEditForm/Create";
-
+import { params } from "./components/UrlParam";
 export interface Dialogtype {
   handleClickOpens: () => void;
 }
 const UseStyles = makeStyles({
   App: {
     textAlign: "center",
-    margin: "10px auto",
+    margin: "100px auto",
   },
 });
 function App() {
   const classes = UseStyles();
-  const { data, isPending, error } = useFetch("http://localhost:5000/Students");
-  const [appstudents, setAppstudents] = React.useState<Student[]>([]);
+  const { data, isPending, error } = useFetch(params);
+  const [appstudents, setAppStudents] = React.useState<Student[]>([]);
   const [id, getId] = React.useState<number>(0);
+  const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     if (data?.length) {
-      setAppstudents(data);
+      setAppStudents(data);
     }
   }, [data]);
   const initialState: Dialogtype = {
     handleClickOpens: () => {},
   };
   const AppContent = React.createContext<Dialogtype>(initialState);
-
-  const [open, setOpen] = React.useState(false);
   const handleClickOpens = () => {
     setOpen(true);
   };
-
   const handleID = () => {
     getId(0);
   };
@@ -74,8 +69,8 @@ function App() {
                   >
                     <Create
                       id={id}
-                      createstu={appstudents}
-                      setCreatestu={setAppstudents}
+                      createStu={appstudents}
+                      setCreateStu={setAppStudents}
                     />
                   </CustomizedDialogs>
                 )}

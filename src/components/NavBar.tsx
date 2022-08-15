@@ -1,13 +1,14 @@
 import React from "react";
-import { useRef } from "react";
-import { Box, TextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
-import PersonIcon from "@mui/icons-material/Person";
-import type { Topprops } from "./ComponentTypes";
+import {
+  makeStyles,
+  Box,
+  TextField,
+  Button,
+  EditIcon,
+  PersonIcon,
+} from "../UiComponents";
+import type { TopProps } from "./ComponentTypes";
 import { Typography } from "@mui/material";
-
 const UseStyles = makeStyles({
   Top: {
     display: "flex",
@@ -17,10 +18,8 @@ const UseStyles = makeStyles({
     alignItems: "center",
     margin: 0,
     marginTop: "20px",
-
     boxSizing: "border-box",
     flexWrap: "wrap",
-    /* border: 1px solid lightgray; */
     "@media screen and (max-width:630px)": {
       flexWrap: "no-wrap",
     },
@@ -80,46 +79,53 @@ const UseStyles = makeStyles({
     paddingRight: "2px",
     paddingLeft: "2px",
   },
+  personIcon: {
+    fontSize: "24px ",
+    padding: "1",
+    alignSelf: "center",
+  },
+  editIcon: {
+    fontSize: "12px",
+    borderRight: "1px solid white",
+    marginRight: "5px",
+    paddingRight: "5px",
+    paddingTop: "0",
+    paddingBottom: "0",
+  },
 });
-const Top = ({
-  topstudents,
+const NavBar = ({
+  topStudents,
   term,
-  searchkeyword,
+  searchKeyword,
   handleClickOpen,
   handleID,
-}: Topprops) => {
+}: TopProps) => {
   const classes = UseStyles();
   const handleCHange = () => {
     handleClickOpen();
     handleID();
   };
-
   return (
     <Box className={classes.Top}>
       <Box className={classes.Search}>
         <TextField
           type="text"
           label="Search"
-          // variant="outlined"
           placeholder="Search..."
           className={classes.input}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target !== null) {
-              searchkeyword(e.target.value);
+              searchKeyword(e.target.value);
             }
           }}
           value={term}
-          // onChange={handlechange}
         />
       </Box>
       <Box className={classes.Students}>
-        <PersonIcon
-          sx={{ fontSize: "24px ", padding: "1", alignSelf: "center" }}
-        />
+        <PersonIcon className={classes.personIcon} />
         <Typography className={classes.h5} variant="h6">
-          {Object.keys(topstudents).length} Students
+          {Object.keys(topStudents).length} Students
         </Typography>
-
         <Button
           variant="contained"
           color="primary"
@@ -127,21 +133,11 @@ const Top = ({
           onClick={handleCHange}
           className={classes.btn}
         >
-          <EditIcon
-            sx={{
-              fontSize: "12px",
-              borderRight: "1px solid white",
-              marginRight: "5px",
-              paddingRight: "5px",
-              paddingTop: "0",
-              paddingBottom: "0",
-            }}
-          />
+          <EditIcon className={classes.editIcon} />
           New
         </Button>
       </Box>
     </Box>
   );
 };
-
-export default Top;
+export default NavBar;

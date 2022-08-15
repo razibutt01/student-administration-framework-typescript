@@ -2,31 +2,29 @@
   "Students": [
     {
       "name": "Fasih ul Hassan butt",
-      "Place_of_Birth": "Pakistani",
-      "Date_of_Birth": "2005-05-06",
+      "placeOfBirth": "Pakistani",
+      "dateOfBirth": "2005-05-06",
       "sex": "Male",
       "groups": [
-        "Maths",
-        "Chemistry",
-        "Physics",
-        "Computer"
+        "Computer",
+        "Biology"
       ],
       "id": 2
     },
     {
       "name": "Waleed butt",
-      "id": 3,
+      "placeOfBirth": "sfdasd",
+      "dateOfBirth": "2022-07-18",
       "sex": "Male",
-      "Date_of_Birth": "2022-07-18",
-      "Place_of_Birth": "sfdasd",
       "groups": [
         "Physics"
-      ]
+      ],
+      "id": 3
     },
     {
       "name": "dsdfds",
-      "Place_of_Birth": "dfdsf",
-      "Date_of_Birth": "2022-07-11",
+      "placeOfBirth": "dfdsf",
+      "dateOfBirth": "2022-07-11",
       "sex": "Female",
       "groups": [
         "Chemistry",
@@ -38,8 +36,8 @@
       "name": "john ",
       "id": 5,
       "sex": "Male",
-      "Date_of_Birth": "2022-07-20",
-      "Place_of_Birth": "USA",
+      "dateOfBirth": "2022-07-20",
+      "placeOfBirth": "USA",
       "groups": [
         "Chemistry",
         "Maths",
@@ -49,8 +47,8 @@
     {
       "name": "Sabahat butt",
       "sex": "Male",
-      "Date_of_Birth": "2022-07-23",
-      "Place_of_Birth": "South Africa",
+      "dateOfBirth": "2022-07-23",
+      "placeOfBirth": "South Africa",
       "groups": [
         "Computer",
         "Physics"
@@ -59,8 +57,8 @@
     },
     {
       "name": "ghgjghj",
-      "Place_of_Birth": "hgjghj",
-      "Date_of_Birth": "2022-07-08",
+      "placeOfBirth": "hgjghj",
+      "dateOfBirth": "2022-07-08",
       "sex": "Male",
       "groups": [
         "Maths",
@@ -72,8 +70,8 @@
     {
       "name": "ghjghjghjhgj",
       "sex": "Male",
-      "Date_of_Birth": "2022-07-06",
-      "Place_of_Birth": "hgjhgjghjhgjgh",
+      "dateOfBirth": "2022-07-06",
+      "placeOfBirth": "hgjhgjghjhgjgh",
       "groups": [
         "Chemistry",
         "Maths"
@@ -83,8 +81,8 @@
     {
       "name": "wrwerery",
       "sex": "Male",
-      "Date_of_Birth": "2022-07-04",
-      "Place_of_Birth": "ewrgfhgfh",
+      "dateOfBirth": "2022-07-04",
+      "placeOfBirth": "ewrgfhgfh",
       "groups": [
         "Chemistry",
         "Maths",
@@ -95,26 +93,14 @@
     {
       "name": "werwererrrtyr",
       "sex": "Male",
-      "Date_of_Birth": "2022-07-09",
-      "Place_of_Birth": "erwerewrewrewr",
+      "dateOfBirth": "2022-07-09",
+      "placeOfBirth": "erwerewrewrewr",
       "groups": [
         "Maths",
         "Chemistry",
         "Physics"
       ],
       "id": 10
-    },
-    {
-      "name": "abcd",
-      "Place_of_Birth": "Pakistan",
-      "Date_of_Birth": "2022-07-12",
-      "sex": "Male",
-      "groups": [
-        "Chemistry",
-        "Maths",
-        "Physics"
-      ],
-      "id": 12
     }
   ]
 }
