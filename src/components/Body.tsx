@@ -1,11 +1,11 @@
 import React from "react";
-import { makeStyles, Box, Container, Paper } from "../UiComponents";
-import type { Student } from "./ComponentTypes";
-import type { BodyType } from "./ComponentTypes";
-import useFetch from "../CustomHook/useFetch";
-import SideBar from "./SideBar";
-import Tables from "./Tables";
-import NavBar from "./NavBar";
+import { makeStyles, Box, Container, Paper } from "UiComponents";
+import type { Student } from "components/ComponentTypes";
+import type { BodyType } from "components/ComponentTypes";
+import useFetch from "CustomHook/useFetch";
+import SideBar from "components/SideBar";
+import Tables from "components/Tables";
+import NavBar from "components/NavBar";
 import { params } from "./UrlParam";
 const UseStyles = makeStyles({
   Body: {
@@ -60,7 +60,11 @@ const UseStyles = makeStyles({
     },
   },
 });
-const Body = ({ handleClickOpens, getId, handleID }: BodyType) => {
+const Body = ({
+  handleClickOpens,
+  getEditStudent,
+  handleEditStudent2,
+}: BodyType) => {
   const { data, isPending, error } = useFetch(params);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -103,7 +107,7 @@ const Body = ({ handleClickOpens, getId, handleID }: BodyType) => {
     }
     setGroupArr(newValue);
   };
-  console.log(GroupArr);
+
   React.useEffect(() => {
     if (data?.length) {
       setStudents(data);
@@ -118,7 +122,7 @@ const Body = ({ handleClickOpens, getId, handleID }: BodyType) => {
             term={searchTerm}
             searchKeyword={searchHandler}
             handleClickOpen={handleClickOpens}
-            handleID={handleID}
+            handleEditStudent2={handleEditStudent2}
           />
         )}
       </Box>
@@ -141,7 +145,7 @@ const Body = ({ handleClickOpens, getId, handleID }: BodyType) => {
                   : searchResults
               }
               setTableStu={setStudents}
-              getId={getId}
+              getEditStudent={getEditStudent}
               handleClickOpens={handleClickOpens}
             />
           )}

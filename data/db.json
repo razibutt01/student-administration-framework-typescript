@@ -2,9 +2,9 @@
   "Students": [
     {
       "name": "Fasih ul Hassan butt",
-      "placeOfBirth": "Pakistani",
-      "dateOfBirth": "2005-05-06",
       "sex": "Male",
+      "dateOfBirth": "2005-05-06",
+      "placeOfBirth": "Pakistani",
       "groups": [
         "Computer",
         "Biology"

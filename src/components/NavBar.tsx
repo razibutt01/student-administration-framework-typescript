@@ -6,8 +6,8 @@ import {
   Button,
   EditIcon,
   PersonIcon,
-} from "../UiComponents";
-import type { TopProps } from "./ComponentTypes";
+} from "UiComponents";
+import type { TopProps } from "components/ComponentTypes";
 import { Typography } from "@mui/material";
 const UseStyles = makeStyles({
   Top: {
@@ -98,12 +98,12 @@ const NavBar = ({
   term,
   searchKeyword,
   handleClickOpen,
-  handleID,
+  handleEditStudent2,
 }: TopProps) => {
   const classes = UseStyles();
   const handleCHange = () => {
     handleClickOpen();
-    handleID();
+    handleEditStudent2();
   };
   return (
     <Box className={classes.Top}>

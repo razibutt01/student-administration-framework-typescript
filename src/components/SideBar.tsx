@@ -1,6 +1,6 @@
 import React from "react";
-import { makeStyles, FormControlLabel, TextField, Box } from "../UiComponents";
-import type { SideProps } from "./ComponentTypes";
+import { makeStyles, FormControlLabel, TextField, Box } from "UiComponents";
+import type { SideProps } from "components/ComponentTypes";
 const UseStyles = makeStyles({
   side: {
     display: "flex",

@@ -11,11 +11,11 @@ import {
 } from "../UiComponents";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import type { CreateStudentProps } from "../components/ComponentTypes";
-import type { CreateProps } from "../components/ComponentTypes";
-import type { InputProps } from "../components/ComponentTypes";
-import { params } from "../components/UrlParam";
-import { fetchWrapper, _updateData } from "../Utils/FetchWrapper";
+import type { CreateStudentProps } from "components/ComponentTypes";
+import type { CreateProps } from "components/ComponentTypes";
+import type { InputProps } from "components/ComponentTypes";
+import { params } from "components/UrlParam";
+import { fetchWrapper, _updateData } from "Utils/FetchWrapper";
 
 const UseStyles = makeStyles({
   create: {
@@ -77,10 +77,8 @@ const UseStyles = makeStyles({
     marginRight: "5px",
   },
 });
-const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
-  const [students, setStudents] = React.useState<CreateStudentProps[]>([]);
-  const [isPending, setPending] = React.useState<boolean>(false);
-  const isAddMode = !id;
+const Create = ({ createStu, setCreateStu, editStudent }: CreateProps) => {
+  const isAddMode = !editStudent;
   const classes = UseStyles();
   const validationSchema = yup.object().shape({
     name: yup
@@ -102,50 +100,53 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
       .max(4, "maximum 4 fields can be chosen")
       .required("Groups are required"),
   });
-  const { register, handleSubmit, reset, setValue, getValues, formState } =
-    useForm<CreateStudentProps>({
-      resolver: yupResolver(validationSchema),
-    });
-  const { errors } = formState;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateStudentProps>({
+    resolver: yupResolver(validationSchema),
+    mode: "onTouched",
+    defaultValues: {
+      name: editStudent ? editStudent.name : "",
+      sex: editStudent ? editStudent.sex : "",
+      dateOfBirth: editStudent ? editStudent.dateOfBirth : "",
+      placeOfBirth: editStudent ? editStudent.placeOfBirth : "",
+      groups: editStudent ? editStudent.groups : [],
+      id: editStudent ? editStudent.id : 0,
+    },
+  });
 
   function onSubmit(data: CreateStudentProps) {
-    return isAddMode ? createStudent(data) : updateStudent(data, id);
+    return isAddMode
+      ? createStudent(data)
+      : updateStudent(data, editStudent.id);
   }
-  function updateStudent(data: CreateStudentProps, id: number) {
-    fetchWrapper({ method: "PUT", body: data, url: `${params}/` + id }).then(
-      () => {
-        setCreateStu(
-          createStu.map((student) => (student.id === id ? data : student))
-        );
+  async function updateStudent(data: CreateStudentProps, id: number) {
+    const resData = await fetchWrapper({
+      method: "PUT",
+      body: data,
+      url: `${params}/` + id,
+    });
+    const updatedData = await resData;
+    setCreateStu(
+      createStu.map((student) => (student.id === id ? updatedData : student))
+    );
 
-        _updateData(params, setCreateStu);
-      }
-    );
+    _updateData(params, setCreateStu);
   }
-  function createStudent(data: CreateStudentProps) {
-    fetchWrapper({ method: "POST", body: data, url: `${params}` }).then(
-      (data) => {
-        setCreateStu((prev: CreateStudentProps[]) => [...prev, data]);
-      }
-    );
+
+  async function createStudent(data: CreateStudentProps) {
+    const resData = await fetchWrapper({
+      method: "POST",
+      body: data,
+      url: `${params}`,
+    });
+    const createdData = await resData;
+    setCreateStu((prev: CreateStudentProps[]) => [...prev, createdData]);
   }
-  React.useEffect(() => {
-    if (!isAddMode) {
-      // get user and set form fields
-      fetch(`${params}/` + id)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          const fields: Array<
-            "name" | "placeOfBirth" | "dateOfBirth" | "sex" | "groups"
-          > = ["name", "placeOfBirth", "dateOfBirth", "sex", "groups"];
-          fields.forEach((field) => setValue(field, data[field]));
-          setStudents(data);
-        });
-    }
-  }, []);
-  console.log("getValues", getValues());
+
   const TextInputArr: InputProps[] = [
     {
       label: "Name",
@@ -174,7 +175,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
       <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
         <FormControl>
           {TextInputArr.map((input) => {
-            console.log("input", input);
             return (
               <Box className={classes.box}>
                 <FormLabel htmlFor={input.name}>{input.label}</FormLabel>
@@ -186,7 +186,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                   error={!!errors[input.name]}
                   helperText={errors[input.name] && errors[input.name]?.message}
                   {...register(input.name)}
-                  defaultValue={!isAddMode ? { getValues } : ""}
                 />
               </Box>
             );
@@ -203,7 +202,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                       type="radio"
                       value="Male"
                       {...register("sex")}
-                      defaultValue={!isAddMode ? { getValues } : ""}
                       variant="filled"
                     />
                   }
@@ -218,7 +216,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                       type="radio"
                       value="Female"
                       {...register("sex")}
-                      defaultValue={!isAddMode ? { getValues } : ""}
                       variant="filled"
                     />
                   }
@@ -240,7 +237,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                     type="checkbox"
                     value="Maths"
                     {...register("groups")}
-                    defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
@@ -253,7 +249,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                     type="checkbox"
                     value="Chemistry"
                     {...register("groups")}
-                    defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
@@ -266,7 +261,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                     type="checkbox"
                     value="Physics"
                     {...register("groups")}
-                    defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
@@ -279,7 +273,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                     type="checkbox"
                     value="Computer"
                     {...register("groups")}
-                    defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
@@ -292,7 +285,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                     type="checkbox"
                     value="Biology"
                     {...register("groups")}
-                    defaultValue={!isAddMode ? { getValues } : ""}
                     variant="filled"
                   />
                 }
@@ -309,7 +301,6 @@ const Create = ({ createStu, setCreateStu, id }: CreateProps) => {
                 color="primary"
                 size="small"
                 type="submit"
-                // sx={{ marginRight: "5px" }}
               >
                 {isAddMode ? "Submit" : "Save"}
               </Button>

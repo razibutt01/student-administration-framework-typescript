@@ -1,5 +1,4 @@
-import React from "react";
-import type { Student, fetchWrapperprop } from "../components/ComponentTypes";
+import type { Student, fetchWrapperprop } from "components/ComponentTypes";
 
 export function _updateData(
   params: string,

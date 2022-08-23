@@ -16,8 +16,8 @@ export type Student = {
 };
 export type BodyType = {
   handleClickOpens: () => void;
-  getId: (id: number) => void;
-  handleID: () => void;
+  getEditStudent: (student: Student) => void;
+  handleEditStudent2: () => void;
 };
 export type SideProps = {
   getFilter(e: string): void;
@@ -34,7 +34,7 @@ export type TableProps = {
   tableStu: tableStudentProps[];
   setTableStu(e: tableStudentProps[]): void;
   handleClickOpens: () => void;
-  getId: (id: number) => void;
+  getEditStudent: (student: tableStudentProps) => void;
 };
 export type TopStudentProps = {
   name: string;
@@ -49,7 +49,7 @@ export type TopProps = {
   searchKeyword(e: string): void;
   topStudents: TopStudentProps[];
   handleClickOpen: () => void;
-  handleID: () => void;
+  handleEditStudent2: () => void;
 };
 export type CreateStudentProps = {
   name: string;
@@ -62,7 +62,7 @@ export type CreateStudentProps = {
 export type CreateProps = {
   createStu: CreateStudentProps[];
   setCreateStu: React.Dispatch<React.SetStateAction<Student[]>>;
-  id: number;
+  editStudent: CreateStudentProps;
 };
 export type fetchWrapperprop = {
   method: "GET" | "POST" | "PUT" | "DELETE";

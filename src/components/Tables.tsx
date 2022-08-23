@@ -11,10 +11,10 @@ import {
   DeleteRoundedIcon,
   makeStyles,
   Box,
-} from "../UiComponents";
-import type { TableProps } from "./ComponentTypes";
-import { params } from "./UrlParam";
-import { fetchWrapper, _updateData } from "../Utils/FetchWrapper";
+} from "UiComponents";
+import type { TableProps, tableStudentProps } from "components/ComponentTypes";
+import { params } from "components/UrlParam";
+import { fetchWrapper, _updateData } from "Utils/FetchWrapper";
 const UseStyles = makeStyles({
   table: {
     fontFamily: "arial, sans-serif",
@@ -27,9 +27,9 @@ const UseStyles = makeStyles({
     borderBottom: "1px solid #dddddd",
     textAlign: "left",
     padding: "8px",
-  },
-  head: {
-    fontWeight: "bold",
+    "& > th": {
+      fontWeight: "bold",
+    },
   },
   deleteIcon: {
     cursor: "pointer",
@@ -47,7 +47,7 @@ const Tables = ({
   tableStu,
   handleClickOpens,
   setTableStu,
-  getId,
+  getEditStudent,
 }: TableProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -61,14 +61,17 @@ const Tables = ({
     setPage(0);
   };
 
-  const handleDelete = (id: number) => {
-    fetchWrapper({ method: "DELETE", url: `${params}/` + id }).then(() => {
-      _updateData(params, setTableStu);
+  const handleDelete = async (id: number) => {
+    await fetchWrapper({
+      method: "DELETE",
+      url: `${params}/` + id,
     });
+
+    _updateData(params, setTableStu);
   };
-  const handleStudent = (id: number) => {
+  const handleStudent = (student: tableStudentProps) => {
     handleClickOpens();
-    getId(id);
+    getEditStudent(student);
   };
   return (
     <div className="Table">
@@ -76,12 +79,12 @@ const Tables = ({
         <Table aria-label="simple table" stickyHeader className={classes.table}>
           <TableHead>
             <TableRow className={classes.td}>
-              <TableCell className={classes.head}>Name</TableCell>
-              <TableCell className={classes.head}>Sex</TableCell>
-              <TableCell className={classes.head}>Place of Birth</TableCell>
-              <TableCell className={classes.head}>Date of Birth</TableCell>
-              <TableCell className={classes.head}>Groups</TableCell>
-              <TableCell className={classes.head}>Actions</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Sex</TableCell>
+              <TableCell>Place of Birth</TableCell>
+              <TableCell>Date of Birth</TableCell>
+              <TableCell>Groups</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -90,7 +93,7 @@ const Tables = ({
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((student) => (
                     <TableRow key={student.id} className={classes.td}>
-                      <TableCell onClick={() => handleStudent(student.id)}>
+                      <TableCell onClick={() => handleStudent(student)}>
                         <Box className={classes.studentCell}>
                           {student.name}
                         </Box>

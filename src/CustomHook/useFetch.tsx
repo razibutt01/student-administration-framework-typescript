@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Student } from "../components/ComponentTypes";
+import type { Student } from "components/ComponentTypes";
 
 const useFetch = (url: string) => {
   const [data, setData] = useState<Student[]>([]);
@@ -21,7 +21,6 @@ const useFetch = (url: string) => {
       })
       .catch((err) => {
         if (err.name === "AbortError") {
-          console.log("fetch aborted");
         } else {
           seterror(err.message);
           setpending(false);

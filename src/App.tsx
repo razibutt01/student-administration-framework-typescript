@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { makeStyles, Container, Typography } from "./UiComponents";
-import type { Student } from "./components/ComponentTypes";
-import "./App.css";
-import useFetch from "./CustomHook/useFetch";
-import Body from "./components/Body";
-import CustomizedDialogs from "./components/CustomizedDialogs";
-import Create from "./AddEditForm/Create";
-import { params } from "./components/UrlParam";
+import { makeStyles, Container, Typography } from "UiComponents";
+import type { Student } from "components/ComponentTypes";
+import "App.css";
+import useFetch from "CustomHook/useFetch";
+import Body from "components/Body";
+import CustomizedDialogs from "components/CustomizedDialogs";
+import Create from "AddEditForm/Create";
+import { params } from "components/UrlParam";
 export interface Dialogtype {
   handleClickOpens: () => void;
 }
@@ -21,7 +21,14 @@ function App() {
   const classes = UseStyles();
   const { data, isPending, error } = useFetch(params);
   const [appstudents, setAppStudents] = React.useState<Student[]>([]);
-  const [id, getId] = React.useState<number>(0);
+  const [editStudent, getEditStudent] = React.useState<Student>({
+    name: "",
+    sex: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
+    groups: [],
+    id: 0,
+  });
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     if (data?.length) {
@@ -35,11 +42,18 @@ function App() {
   const handleClickOpens = () => {
     setOpen(true);
   };
-  const handleID = () => {
-    getId(0);
+  const handleEditStudent2 = () => {
+    getEditStudent({
+      name: "",
+      sex: "",
+      dateOfBirth: "",
+      placeOfBirth: "",
+      groups: [],
+      id: 0,
+    });
   };
-  const handleId = (id: number) => {
-    getId(id);
+  const handleEditStudent = (student: Student) => {
+    getEditStudent(student);
   };
   return (
     <AppContent.Provider value={{ handleClickOpens }}>
@@ -54,8 +68,10 @@ function App() {
               <Route exact path="/">
                 <Body
                   handleClickOpens={handleClickOpens}
-                  getId={(id: number) => handleId(id)}
-                  handleID={handleID}
+                  getEditStudent={(student: Student) =>
+                    handleEditStudent(student)
+                  }
+                  handleEditStudent2={handleEditStudent2}
                 />
               </Route>
               <Route>
@@ -68,7 +84,7 @@ function App() {
                     handleClickOpen={handleClickOpens}
                   >
                     <Create
-                      id={id}
+                      editStudent={editStudent}
                       createStu={appstudents}
                       setCreateStu={setAppStudents}
                     />
