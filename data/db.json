@@ -1,0 +1,106 @@
+{
+  "Students": [
+    {
+      "name": "Fasih ul Hassan butt",
+      "sex": "Male",
+      "dateOfBirth": "2005-05-06",
+      "placeOfBirth": "Pakistani",
+      "groups": [
+        "Computer",
+        "Biology"
+      ],
+      "id": 2
+    },
+    {
+      "name": "Waleed butt",
+      "placeOfBirth": "sfdasd",
+      "dateOfBirth": "2022-07-18",
+      "sex": "Male",
+      "groups": [
+        "Physics"
+      ],
+      "id": 3
+    },
+    {
+      "name": "dsdfds",
+      "placeOfBirth": "dfdsf",
+      "dateOfBirth": "2022-07-11",
+      "sex": "Female",
+      "groups": [
+        "Chemistry",
+        "Computer"
+      ],
+      "id": 4
+    },
+    {
+      "name": "john ",
+      "id": 5,
+      "sex": "Male",
+      "dateOfBirth": "2022-07-20",
+      "placeOfBirth": "USA",
+      "groups": [
+        "Chemistry",
+        "Maths",
+        "Biology"
+      ]
+    },
+    {
+      "name": "Sabahat butt",
+      "sex": "Male",
+      "dateOfBirth": "2022-07-23",
+      "placeOfBirth": "South Africa",
+      "groups": [
+        "Computer",
+        "Physics"
+      ],
+      "id": 6
+    },
+    {
+      "name": "ghgjghj",
+      "placeOfBirth": "hgjghj",
+      "dateOfBirth": "2022-07-08",
+      "sex": "Male",
+      "groups": [
+        "Maths",
+        "Chemistry",
+        "Physics"
+      ],
+      "id": 7
+    },
+    {
+      "name": "ghjghjghjhgj",
+      "sex": "Male",
+      "dateOfBirth": "2022-07-06",
+      "placeOfBirth": "hgjhgjghjhgjgh",
+      "groups": [
+        "Chemistry",
+        "Maths"
+      ],
+      "id": 8
+    },
+    {
+      "name": "wrwerery",
+      "sex": "Male",
+      "dateOfBirth": "2022-07-04",
+      "placeOfBirth": "ewrgfhgfh",
+      "groups": [
+        "Chemistry",
+        "Maths",
+        "Physics"
+      ],
+      "id": 9
+    },
+    {
+      "name": "werwererrrtyr",
+      "sex": "Male",
+      "dateOfBirth": "2022-07-09",
+      "placeOfBirth": "erwerewrewrewr",
+      "groups": [
+        "Maths",
+        "Chemistry",
+        "Physics"
+      ],
+      "id": 10
+    }
+  ]
+}
